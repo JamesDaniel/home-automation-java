@@ -17,4 +17,11 @@ public class Outlet {
     public void setOutletStatus(OutletStatus outletStatus) {
         this.outletStatus = outletStatus;
     }
+
+    @Override
+    public String toString() {
+        return "Outlet{" +
+                "outletStatus=" + outletStatus +
+                '}';
+    }
 }

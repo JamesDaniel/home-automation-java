@@ -1,36 +1,61 @@
 package com.home.automation.homeautomation.services;
 
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.home.automation.homeautomation.config.FirebaseInit;
+import com.home.automation.homeautomation.enums.ServiceStatus;
+import com.home.automation.homeautomation.models.Heartbeat;
+import com.home.automation.homeautomation.models.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.sql.Timestamp;
 
 @Component
 public class HeartbeatService {
 
-    @Value("${service.account.path}")
-    private String pathToServiceAccountJson;
+    @Value("${service.description}")
+    private String serviceDescription;
 
-    @Value("${database.url}")
-    private String databaseUrl;
+    @Autowired
+    private FirebaseInit firebaseInit;
 
-    public void setupDatabaseConnection() {
-        try {
-            FileInputStream serviceAccount = new FileInputStream(pathToServiceAccountJson);
+    private Service service;
 
-            FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .setDatabaseUrl(databaseUrl)
-                    .build();
+    public void beat() {
+        updateDatabaseValue();
+    }
 
-            FirebaseApp.initializeApp(options);
-        } catch (IOException ex) {
+    @Scheduled(fixedRate = 10000)
+    private void updateDatabaseValue() {
+        Service service = new Service();
+        service.setDescription(serviceDescription);
+        Heartbeat heartbeat = new Heartbeat();
+        heartbeat.setStatus(ServiceStatus.UP);
+        heartbeat.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        service.setHeartbeat(heartbeat);
+        firebaseInit.getRef().setValueAsync(service);
+    }
 
-        }
+    private void getDatabaseValue() {
+        DatabaseReference ref = firebaseInit.getRef();
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                service = dataSnapshot.getValue(Service.class);
+                System.out.println(service);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
     }
 
 }

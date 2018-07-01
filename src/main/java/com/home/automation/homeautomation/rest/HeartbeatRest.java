@@ -1,5 +1,6 @@
 package com.home.automation.homeautomation.rest;
 
+import com.home.automation.homeautomation.enums.ServiceStatus;
 import com.home.automation.homeautomation.models.Heartbeat;
 import com.home.automation.homeautomation.services.HeartbeatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,11 @@ public class HeartbeatRest {
 
     @RequestMapping(value="/heartbeat")
     public ResponseEntity<Heartbeat> heartbeat() {
-        heartbeatService.setupDatabaseConnection();
+        heartbeatService.beat();
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         Heartbeat heartbeat = getCurrentTimeHeartbeat(timestamp);
-        heartbeat.setSystemStatus("ok");
+        heartbeat.setStatus(ServiceStatus.UP);
         ResponseEntity<Heartbeat> responseEntity = ResponseEntity.ok()
                 .body(heartbeat);
         return responseEntity;

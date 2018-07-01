@@ -1,11 +1,13 @@
 package com.home.automation.homeautomation.models;
 
 
+import com.home.automation.homeautomation.enums.ServiceStatus;
+
 import java.sql.Timestamp;
 
 public class Heartbeat {
 
-    private String systemStatus;
+    private ServiceStatus status;
     private Timestamp timestamp;
 
     public static Heartbeat getCurrentTimeHeartbeat(Timestamp timestamp) {
@@ -14,12 +16,12 @@ public class Heartbeat {
         return heartbeat;
     }
 
-    public String getSystemStatus() {
-        return systemStatus;
+    public ServiceStatus getStatus() {
+        return status;
     }
 
-    public void setSystemStatus(String systemStatus) {
-        this.systemStatus = systemStatus;
+    public void setStatus(ServiceStatus status) {
+        this.status = status;
     }
 
     public Timestamp getTimestamp() {
@@ -33,7 +35,7 @@ public class Heartbeat {
     @Override
     public String toString() {
         return "Heartbeat{" +
-                "systemStatus='" + systemStatus + '\'' +
+                "status='" + status + '\'' +
                 ", timestamp=" + timestamp +
                 '}';
     }

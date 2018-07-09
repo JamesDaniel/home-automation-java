@@ -1,42 +1,27 @@
 package com.home.automation.homeautomation.models;
 
-
-import com.home.automation.homeautomation.enums.ServiceStatus;
-
-import java.sql.Timestamp;
-
 public class Heartbeat {
 
-    private ServiceStatus status;
-    private Timestamp timestamp;
+    private long systemTime;
 
-    public static Heartbeat getCurrentTimeHeartbeat(Timestamp timestamp) {
+    public static Heartbeat getCurrentTimeHeartbeat(long systemTime) {
         Heartbeat heartbeat = new Heartbeat();
-        heartbeat.setTimestamp(timestamp);
+        heartbeat.setSystemTime(systemTime);
         return heartbeat;
     }
 
-    public ServiceStatus getStatus() {
-        return status;
+    public long getSystemTime() {
+        return systemTime;
     }
 
-    public void setStatus(ServiceStatus status) {
-        this.status = status;
-    }
-
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+    public void setSystemTime(long systemTime) {
+        this.systemTime = systemTime;
     }
 
     @Override
     public String toString() {
         return "Heartbeat{" +
-                "status='" + status + '\'' +
-                ", timestamp=" + timestamp +
+                "systemTime=" + systemTime +
                 '}';
     }
 }

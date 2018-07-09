@@ -34,9 +34,9 @@ public class HeartbeatService {
     private void updateDatabaseValue() {
         Service service = new Service();
         service.setDescription(serviceDescription);
+        service.setStatus(ServiceStatus.UP);
         Heartbeat heartbeat = new Heartbeat();
-        heartbeat.setStatus(ServiceStatus.UP);
-        heartbeat.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        heartbeat.setSystemTime(System.currentTimeMillis());
         service.setHeartbeat(heartbeat);
         firebaseInit.getRef().setValueAsync(service);
     }
